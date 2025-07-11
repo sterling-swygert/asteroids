@@ -10,8 +10,16 @@ from asteroidfield import AsteroidField
 
 def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    clock = pygame.time.Clock()
+
+    score = 0
     dt = 0
+
+    pygame.font.init()
+    font = pygame.font.Font(None, 36)
+    score_text = font.render(f'Score: {score}', True, (255, 255, 255))
+    screen.blit(score_text, (10, 10))
+    clock = pygame.time.Clock()
+    font = pygame.font.Font(None, 36)
 
     updatables = pygame.sprite.Group()
     drawables = pygame.sprite.Group()
@@ -33,6 +41,8 @@ def main():
                 return
             
         screen.fill(color="black")
+        score_text = font.render(f'Score: {score}', True, (255, 255, 255))
+        screen.blit(score_text, (10, 10))
         updatables.update(dt)
 
         for drawable in drawables:
@@ -41,8 +51,10 @@ def main():
         for asteroid in asteroids:
             for shot in shots:
                 if asteroid.check_collision(shot):
+                    
                     asteroid.split()
                     shot.kill()
+                    score += ASTEROID_POINTS
                     break
 
             if asteroid.check_collision(player):
